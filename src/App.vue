@@ -1,5 +1,4 @@
 <template>
-  <h1>Conway's Game of life v1</h1>
   <GameOfLife/>
 </template>
 
@@ -23,8 +22,5 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-h1{
-  align-self: center;
-  color: royalblue;
-}
+
 </style>

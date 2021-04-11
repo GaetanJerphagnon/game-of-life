@@ -1,5 +1,8 @@
 <template>
   <div class="toolbar d-flex flex-column justify-content-between">
+    <div class="navbar navbar-light container bg-secondary justify-content-start">
+      <h2> Conway's Game of life v1 </h2> | Infos: <span v-if="isRunning"> <i class="fa fa-sync-alt"></i> Game's running </span>
+    </div>
     <nav class="navbar navbar-light container bg-secondary justify-content-start">
         <button v-if="!isRunning" data-toggle="tooltip" data-placement="bottom" title="Start the game and watch how cells develop!" class="btn btn-success mx-2 my-2 my-sm-0" type="submit" @click="startGame()"><i class="fa fa-play"></i></button>
         <button v-else data-toggle="tooltip" data-placement="bottom" title="Stop cells from developing" class="btn btn-danger mx-2 my-2 my-sm-0" type="submit" @click="stopGame()"><i class="fa fa-stop"></i></button>
@@ -8,9 +11,6 @@
         <button data-toggle="tooltip" data-placement="bottom" title="Put starter figure in center of the grid" class="btn btn-primary mx-2 my-2 my-sm-0" type="submit" @click="setStarter()">Starter <i class="fa fa-shapes"></i></button>
 
 
-    <div class="navbar navbar-light container bg-secondary justify-content-start">
-      Infos: <span v-if="isRunning"> <i class="fa fa-sync-alt"></i> Game's running </span>
-    </div>
     <div class="navbar navbar-light container bg-secondary justify-content-start">
       <span class="text-light">
         Left click : <span class="font-weight-bold text-danger"> Life <i class="fa fa-heart"></i></span><br>
@@ -30,7 +30,7 @@ export default {
     return{
       columnsAmount:70,
       rowsAmount: 40,
-      cellSize: 15,
+      cellSize: 10,
       grid: [],
       isRunning: false,
       interval: null,
@@ -76,18 +76,20 @@ export default {
 
     onMouseDown(e){
       let cell = e.target;
-      if(e.which == 2){
-        this.killCell(e);
-        document.querySelector('.game').addEventListener('mouseup', this.stopMouseDown);
-        document.querySelectorAll('.cell').forEach(item => {
-          item.addEventListener('mouseenter', this.killCell);
-        })
-      } else if(e.which == 1){
-        cell.classList.add('cell--prepare');
-        document.querySelector('.game').addEventListener('mouseup', this.stopMouseDown);
-        document.querySelectorAll('.cell').forEach(item => {
-          item.addEventListener('mouseenter', this.prepareToggleLife);
-        })
+      if(e.target.classList.contains('cell') ){
+          if(e.which == 2){
+            this.killCell(e);
+          document.querySelector('.game').addEventListener('mouseup', this.stopMouseDown);
+          document.querySelectorAll('.cell').forEach(item => {
+            item.addEventListener('mouseenter', this.killCell);
+          })
+        } else if(e.which == 1){
+          cell.classList.add('cell--prepare');
+          document.querySelector('.game').addEventListener('mouseup', this.stopMouseDown);
+          document.querySelectorAll('.cell').forEach(item => {
+            item.addEventListener('mouseenter', this.prepareToggleLife);
+          })
+        }
       }
     },
 
@@ -261,9 +263,9 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: rgb(41, 41, 41);
-  width:1150px;
+  width:780px;
   padding: 1%;
-  margin: 2% auto;
+  margin: 0 auto;
 
 }
 .row{
@@ -276,8 +278,8 @@ export default {
   margin-right: 1px;
   /* border-right: 0.5px lightgray solid; */
   margin-bottom: 1px;
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
 }
 .cell--dead{
   background-color: rgb(110, 110, 110);
@@ -293,6 +295,11 @@ export default {
 
 .cell--hidden{
   background-color: greenyellow;
+}
+
+h2{
+  color: wheat;
+  font-weight: bold;
 }
 
 </style>
