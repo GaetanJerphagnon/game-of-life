@@ -1,5 +1,5 @@
 <template>
-  <div class="game">
+  <div>
     <Grid />
   </div>
 </template>

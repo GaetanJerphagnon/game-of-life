@@ -10,10 +10,16 @@
       <button v-if="isRunning" class="btn btn-danger" @click="stopGame">
         Stop
       </button>
+      <button class="btn btn-info" @click="getAliveCellsPosition">
+        Get alive cells
+      </button>
     </div>
     <canvas
       ref="gameGrid"
       id="gameGrid"
+      @mousedown="startEdit"
+      @mousemove="giveBirth"
+      @mouseup="stopEdit"
       :width="columnNumber * cellSize"
       :height="rowNumber * cellSize"
     />
@@ -44,8 +50,8 @@ export default {
       rowNumber: this.$store.getters.getRowNumber,
       columnNumber: this.$store.getters.getColumnNumber,
       isRunning: false,
+      isEditing: false,
       context: null,
-      time: null,
       starter: [
         [31, 19],
         [31, 20],
@@ -70,10 +76,15 @@ export default {
     cellSize() {
       return this.gridWidth / this.columnNumber + this.cellBorder;
     },
+    totalWidth() {
+      return this.cellSize * this.columnNumber;
+    },
+    totalHeight() {
+      return this.cellSize * this.rowNumber;
+    },
   },
   methods: {
     drawGridSquares() {
-      console.log("drawing squares");
       // Design canvas Xs
       for (let n = 1; n < this.columnNumber; n++) {
         this.context.strokeStyle = "grey";
@@ -119,6 +130,20 @@ export default {
         }
       }
     },
+    getAliveCellsPosition(){
+      let livingCells = this.$store.getters["getAliveCellsPosition"];
+      console.log(livingCells)
+    },
+    giveBirth(e){
+      if (this.isEditing){
+        let x = Math.floor(e.offsetX / this.cellSize);
+        let y = Math.floor(e.offsetY / this.cellSize);
+        if(this.$store.getters["getCellState"](x, y) !== true){
+          this.$store.dispatch("setCellAlive",[x,y]);
+          this.drawCells();
+        }
+      }
+    },
     nextGridState() {
       this.$store.dispatch('nextGridState')
     },
@@ -131,19 +156,24 @@ export default {
       }
       this.$store.dispatch("setGridData", gridData);
     },
+    startEdit(){
+      this.isEditing = true;
+    },
+    stopEdit(){
+      this.isEditing = false;
+    },
     startGame() {
       this.isRunning = true;
       this.timer = setTimeout(
         function tick() {
-          console.log('tick');
           this.nextGridState();
           this.drawCells();
           this.timer = setTimeout(
             tick.bind(this),
-            10
+            100
           )
         }.bind(this),
-        10
+        50
       )
     },
     stopGame() {
@@ -166,13 +196,12 @@ export default {
 
 <style scoped>
 .container-fluid {
-  margin: 2% auto;
+  margin-top: 2%;
   background-color: tan;
-  height: 100vh;
 }
 
 #gameGrid {
   background-color: #999999;
-  margin: 2% auto;
+  margin-top: 2%;
 }
 </style>

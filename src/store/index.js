@@ -19,6 +19,11 @@ export default createStore({
     SET_GRID_DATA(state, array) {
       state.gridData = array;
     },
+    SET_CELL_ALIVE(state, coordinates) {
+      let x = coordinates[0];
+      let y = coordinates[1];
+      state.gridData[x][y] = true;
+    },
     TOGGLE_CELL_STATE(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
@@ -53,6 +58,9 @@ export default createStore({
     toggleCellState({ commit }, coordinates) {
       commit("TOGGLE_CELL_STATE", coordinates);
     },
+    setCellAlive({ commit }, coordinates) {
+      commit("SET_CELL_ALIVE", coordinates);
+    },
   },
 
   getters: {
@@ -67,6 +75,17 @@ export default createStore({
     },
     getColumnNumber: (state) => {
       return state.columnNumber;
+    },
+    getAliveCellsPosition: (state) => {
+      const cells = [];
+      for (let x = 0; x < state.columnNumber; x++) {
+        for (let y = 0; y < state.rowNumber; y++) {
+          if (state.gridData[y][x] === true) {
+            cells.push([y, x]);
+          }
+        }
+      }
+      return cells;
     },
   },
 
