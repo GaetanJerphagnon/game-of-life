@@ -3,22 +3,32 @@
     class="container-fluid"
     :style="'max-width:' + columnNumber * cellSize + ';'"
   >
-    <div class="row container">
-      <button v-if="!isRunning" class="btn btn-success" @click="startGame">
-        Start
-      </button>
-      <button v-if="isRunning" class="btn btn-danger" @click="stopGame">
-        Stop
-      </button>
-      <button class="btn btn-warning" @click="clearGrid">
-        Clear
-      </button>
-      <button class="btn btn-info" @click="tick">
-        Tick
-      </button>
-      <button class="btn btn-secondary" @click="putStarter">
-        Starter
-      </button>
+    <div class="row container d-flex justify-content-center py-1 px-0 mx-auto">
+      <div class="nav-control-left col-5"></div>
+
+      <div class="nav-control-center col-2">
+        <button v-if="!isRunning" class="btn btn-success" @click="startGame">
+          Start
+        </button>
+        <button v-if="isRunning" class="btn btn-danger" @click="stopGame">
+          Stop
+        </button>
+      </div>
+
+      <div class="nav-control-right col-5">
+        <button class="btn btn-warning" @click="clearGrid">
+          Clear
+        </button>
+        <button v-if="!isRunning" class="btn btn-info" @click="tick">
+          Tick
+        </button>
+        <div v-if="isRunning" class="btn btn-secondary" disbaled>
+          Tick
+        </div>
+        <button class="btn btn-light" @click="putStarter">
+          Starter
+        </button>
+      </div>
     </div>
     <canvas
       ref="gameGrid"
@@ -29,17 +39,6 @@
       :width="columnNumber * cellSize"
       :height="rowNumber * cellSize"
     />
-    <!-- <div class="grid d-flex flex-column align-items-center">
-      <div v-for="(y, rowIndex) in rowNumber" :key="rowIndex" class="row">
-        <div
-          v-for="(x, columnIndex) in columnNumber"
-          :key="columnIndex"
-          class="column"
-        >
-          <Cell :xPos="x" :yPos="y" :isAlive="giveBirth()" />
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -51,15 +50,15 @@ export default {
   }, */
   data() {
     return {
-      gridWidth: 1200,
-      cellBorder: 1,
-      rowNumber: this.$store.getters.getRowNumber,
-      columnNumber: this.$store.getters.getColumnNumber,
-      isRunning: false,
-      isEditing: false,
-      wasRunning: false,
-      context: null,
-      starter: [
+      gridWidth: 1200, // Grid width in pixel
+      cellBorder: 1, // Cell separation in pixel
+      rowNumber: this.$store.getters.getRowNumber, // Row amount from store
+      columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
+      isRunning: false, // Tells is the game is running
+      isEditing: false, // Tells if the game is in editor mode
+      wasRunning: false, // Tells if the game was pause during an editor mode
+      context: null, // Context for canvas
+      starter: [ // Starter figure, for tests
         [31, 19],
         [31, 20],
         [31, 21],
@@ -183,7 +182,7 @@ export default {
       return "rgb("+ Math.floor(Math.random()*20+20) +", "+ Math.floor(Math.random()*60+100) +", "+ Math.floor(Math.random()*30+190) +")"
     },
     getRandDeadColor(){
-      let num = Math.floor(Math.random()*10+245);
+      let num = Math.floor(Math.random()*10+235);
       return "rgb("+ num +", "+ num +", "+ num +")"
     },
     nextGridState() {
