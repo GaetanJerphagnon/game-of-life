@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <Grid />
-  </div>
+  <Grid />
 </template>
 
 <script>

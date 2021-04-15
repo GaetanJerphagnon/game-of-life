@@ -10,8 +10,14 @@
       <button v-if="isRunning" class="btn btn-danger" @click="stopGame">
         Stop
       </button>
-      <button class="btn btn-info" @click="getAliveCellsPosition">
-        Get alive cells
+      <button class="btn btn-warning" @click="clearGrid">
+        Clear
+      </button>
+      <button class="btn btn-info" @click="tick">
+        Tick
+      </button>
+      <button class="btn btn-secondary" @click="putStarter">
+        Starter
       </button>
     </div>
     <canvas
@@ -51,6 +57,7 @@ export default {
       columnNumber: this.$store.getters.getColumnNumber,
       isRunning: false,
       isEditing: false,
+      wasRunning: false,
       context: null,
       starter: [
         [31, 19],
@@ -84,6 +91,15 @@ export default {
     },
   },
   methods: {
+    clearGrid(){
+        this.$store.dispatch("initGrid", {
+        rowNumber: this.rowNumber,
+        columnNumber: this.columnNumber,
+      });
+      this.drawCells();
+      this.stopGame();
+    },
+
     drawGridSquares() {
       // Design canvas Xs
       for (let n = 1; n < this.columnNumber; n++) {
@@ -117,9 +133,9 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = "#1350aa";
+            this.context.fillStyle = this.getRandAliveColor();
           } else {
-            this.context.fillStyle = "lightgrey";
+            this.context.fillStyle = this.getRandDeadColor();
           }
           this.context.fillRect(
             x * this.cellSize + this.cellBorder,
@@ -130,6 +146,25 @@ export default {
         }
       }
     },
+    drawEditorCells() {
+      for (let y = 0; y < this.rowNumber; y++) {
+        for (let x = 0; x < this.columnNumber; x++) {
+          let cellState = this.$store.getters["getEditorCellState"](x, y);
+          if (cellState) {
+            this.context.fillStyle = "turquoise";
+          } else {
+            this.context.fillStyle = "white";
+          }
+          this.context.fillRect(
+            x * this.cellSize + this.cellBorder,
+            y * this.cellSize + this.cellBorder,
+            this.cellSize - this.cellBorder,
+            this.cellSize - this.cellBorder
+          );
+        }
+      }
+    },
+    // Not used yet
     getAliveCellsPosition(){
       let livingCells = this.$store.getters["getAliveCellsPosition"];
       console.log(livingCells)
@@ -139,10 +174,17 @@ export default {
         let x = Math.floor(e.offsetX / this.cellSize);
         let y = Math.floor(e.offsetY / this.cellSize);
         if(this.$store.getters["getCellState"](x, y) !== true){
-          this.$store.dispatch("setCellAlive",[x,y]);
-          this.drawCells();
+          this.$store.dispatch("setEditorCellAlive",[x,y]);
+          this.drawEditorCells();
         }
       }
+    },
+    getRandAliveColor(){
+      return "rgb("+ Math.floor(Math.random()*20+20) +", "+ Math.floor(Math.random()*60+100) +", "+ Math.floor(Math.random()*30+190) +")"
+    },
+    getRandDeadColor(){
+      let num = Math.floor(Math.random()*10+245);
+      return "rgb("+ num +", "+ num +", "+ num +")"
     },
     nextGridState() {
       this.$store.dispatch('nextGridState')
@@ -155,31 +197,45 @@ export default {
         gridData[x][y] = true;
       }
       this.$store.dispatch("setGridData", gridData);
+      this.drawCells();
     },
-    startEdit(){
+    startEdit(e){
       this.isEditing = true;
+      this.giveBirth(e);
+      if (this.isRunning){
+        this.stopGame();
+        this.wasRunning = true;
+      }
     },
     stopEdit(){
       this.isEditing = false;
+      if(this.wasRunning){
+        this.startGame();
+        this.wasRunning = false;
+      }
+      this.drawCells();
     },
     startGame() {
       this.isRunning = true;
       this.timer = setTimeout(
         function tick() {
-          this.nextGridState();
-          this.drawCells();
+          this.tick();
           this.timer = setTimeout(
             tick.bind(this),
-            100
+            10
           )
         }.bind(this),
-        50
+        10
       )
     },
     stopGame() {
       this.isRunning = false;
       clearTimeout(this.timer)
     },
+    tick(){
+      this.nextGridState();
+      this.drawCells();
+    }
   },
   mounted() {
     this.context = this.$refs.gameGrid.getContext("2d");
@@ -187,21 +243,15 @@ export default {
       rowNumber: this.rowNumber,
       columnNumber: this.columnNumber,
     });
-    this.putStarter();
+    //this.putStarter();
     this.drawCells();
-    this.$store.dispatch("toggleCellState", [1, 1]);
   },
 };
 </script>
 
 <style scoped>
-.container-fluid {
-  margin-top: 2%;
-  background-color: tan;
-}
-
-#gameGrid {
-  background-color: #999999;
-  margin-top: 2%;
+.btn {
+  width: 80px;
+  margin: 5px 10px;
 }
 </style>

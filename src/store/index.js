@@ -3,9 +3,10 @@ import GameLogic from "@/logic/GameLogic";
 
 export default createStore({
   state: {
-    rowNumber: 50,
-    columnNumber: 80,
+    rowNumber: 30,
+    columnNumber: 50,
     gridData: [],
+    editorGridData: [],
   },
 
   // Mutations are function that affect the State.
@@ -18,11 +19,17 @@ export default createStore({
     },
     SET_GRID_DATA(state, array) {
       state.gridData = array;
+      state.editorGridData = array;
     },
     SET_CELL_ALIVE(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
       state.gridData[x][y] = true;
+    },
+    SET_EDITOR_CELL_ALIVE(state, coordinates) {
+      let x = coordinates[0];
+      let y = coordinates[1];
+      state.editorGridData[x][y] = true;
     },
     TOGGLE_CELL_STATE(state, coordinates) {
       let x = coordinates[0];
@@ -61,6 +68,9 @@ export default createStore({
     setCellAlive({ commit }, coordinates) {
       commit("SET_CELL_ALIVE", coordinates);
     },
+    setEditorCellAlive({ commit }, coordinates) {
+      commit("SET_CELL_ALIVE", coordinates);
+    },
   },
 
   getters: {
@@ -69,6 +79,9 @@ export default createStore({
     },
     getCellState: (state) => (row, col) => {
       return state.gridData[row][col];
+    },
+    getEditorCellState: (state) => (row, col) => {
+      return state.editorGridData[row][col];
     },
     getRowNumber: (state) => {
       return state.rowNumber;

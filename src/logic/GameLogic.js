@@ -13,57 +13,77 @@ export default {
     return grid;
   },
 
-  getNeighbors(gridData, x, y) {
+  getNeighbors(gridData, xx, yy) {
     let neighbors = 0;
+
+    // Making the grid a wrap-around
+    let x = xx - 1;
+    let y = yy - 1;
+    let xxx = xx + 1;
+    let yyy = yy + 1;
+
+    if (x == -1) {
+      x = gridData[yy].length - 1;
+    }
+    if (y == -1) {
+      y = gridData.length - 1;
+    }
+    if (xxx > gridData[yy].length - 1) {
+      xxx = 0;
+    }
+    if (yyy > gridData.length - 1) {
+      yyy = 0;
+    }
+
     // Checking each single neighbor
     // Above
     if (
-      typeof gridData[y - 1] !== "undefined" &&
-      typeof gridData[y - 1][x - 1] !== "undefined" &&
-      gridData[y - 1][x - 1]
+      typeof gridData[y] !== "undefined" &&
+      typeof gridData[y][x] !== "undefined" &&
+      gridData[y][x]
     ) {
       neighbors++;
     }
     if (
-      typeof gridData[y - 1] !== "undefined" &&
-      typeof gridData[y - 1][x] !== "undefined" &&
-      gridData[y - 1][x]
+      typeof gridData[y] !== "undefined" &&
+      typeof gridData[y][x] !== "undefined" &&
+      gridData[y][xx]
     ) {
       neighbors++;
     }
     if (
-      typeof gridData[y - 1] !== "undefined" &&
-      typeof gridData[y - 1][x + 1] !== "undefined" &&
-      gridData[y - 1][x + 1]
+      typeof gridData[y] !== "undefined" &&
+      typeof gridData[y][xxx] !== "undefined" &&
+      gridData[y][xxx]
     ) {
       neighbors++;
     }
     // Left and Right
-    if (typeof gridData[y][x - 1] !== "undefined" && gridData[y][x - 1]) {
+    if (typeof gridData[yy][x] !== "undefined" && gridData[yy][x]) {
       neighbors++;
     }
-    if (typeof gridData[y][x + 1] !== "undefined" && gridData[y][x + 1]) {
+    if (typeof gridData[yy][xxx] !== "undefined" && gridData[yy][xxx]) {
       neighbors++;
     }
     //Beneath
     if (
-      typeof gridData[y + 1] !== "undefined" &&
-      typeof gridData[y + 1][x - 1] !== "undefined" &&
-      gridData[y + 1][x - 1]
+      typeof gridData[yyy] !== "undefined" &&
+      typeof gridData[yyy][x] !== "undefined" &&
+      gridData[yyy][x]
     ) {
       neighbors++;
     }
     if (
-      typeof gridData[y + 1] !== "undefined" &&
-      typeof gridData[y + 1][x] !== "undefined" &&
-      gridData[y + 1][x]
+      typeof gridData[yyy] !== "undefined" &&
+      typeof gridData[yyy][xx] !== "undefined" &&
+      gridData[yyy][xx]
     ) {
       neighbors++;
     }
     if (
-      typeof gridData[y + 1] !== "undefined" &&
-      typeof gridData[y + 1][x + 1] !== "undefined" &&
-      gridData[y + 1][x + 1]
+      typeof gridData[yyy] !== "undefined" &&
+      typeof gridData[yyy][xxx] !== "undefined" &&
+      gridData[yyy][xxx]
     ) {
       neighbors++;
     }

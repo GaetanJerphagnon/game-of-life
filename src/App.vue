@@ -1,12 +1,11 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <router-view />
 </template>
 
 <style>
 #app {
-  padding-top: 2%;
+  height: 100vh;
+  background-color: rgb(87, 87, 87);
 }
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
