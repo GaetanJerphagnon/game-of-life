@@ -1,41 +1,27 @@
 <template>
   <div
-    class="container-fluid"
+    id="grid"
+    class="container-fluid px-0"
     :style="'max-width:' + columnNumber * cellSize + ';'"
   >
-    <div class="row container d-flex justify-content-center py-1 px-0 mx-auto">
-      <div class="nav-control-left col-5"></div>
-
-      <div class="nav-control-center col-2">
-        <button v-if="!isRunning" class="btn btn-success" @click="startGame">
-          Start
-        </button>
-        <button v-if="isRunning" class="btn btn-danger" @click="stopGame">
-          Stop
-        </button>
-      </div>
-
-      <div class="nav-control-right col-5">
-        <button class="btn btn-warning" @click="clearGrid">
-          Clear
-        </button>
-        <button v-if="!isRunning" class="btn btn-info" @click="tick">
-          Tick
-        </button>
-        <div v-if="isRunning" class="btn btn-secondary" disbaled>
-          Tick
-        </div>
-        <button class="btn btn-light" @click="putStarter">
-          Starter
-        </button>
-      </div>
-    </div>
+    <tool-bar
+      :isRunning="isRunning"
+      :speed="speed"
+      @clear-grid="clearGrid"
+      @put-starter="putStarter"
+      @slow-down="slowDown"
+      @speed-up="speedUp"
+      @start-game="startGame"
+      @stop-game="stopGame"
+      @tick="tick"
+    />
     <canvas
       ref="gameGrid"
       id="gameGrid"
       @mousedown="startEdit"
-      @mousemove="giveBirth"
+      @mousemove="editCell"
       @mouseup="stopEdit"
+      :class="{ grid_running: isRunning, grid_editor_pause: isEditing }"
       :width="columnNumber * cellSize"
       :height="rowNumber * cellSize"
     />
@@ -43,14 +29,16 @@
 </template>
 
 <script>
+import ToolBar from './ToolBar.vue';
 export default {
+  components: { ToolBar },
   name: "Grid",
   /*   components: {
     Cell,
   }, */
   data() {
     return {
-      gridWidth: 1200, // Grid width in pixel
+      gridWidth: 1000, // Grid width in pixel
       cellBorder: 1, // Cell separation in pixel
       rowNumber: this.$store.getters.getRowNumber, // Row amount from store
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
@@ -58,6 +46,13 @@ export default {
       isEditing: false, // Tells if the game is in editor mode
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
+      speedValue:{
+        1:160,
+        2:120,
+        3:80,
+        4:40,
+        5:5,
+      },
       starter: [ // Starter figure, for tests
         [31, 19],
         [31, 20],
@@ -88,6 +83,9 @@ export default {
     totalHeight() {
       return this.cellSize * this.rowNumber;
     },
+    speed() {
+      return this.$store.getters.getSpeed;
+    },
   },
   methods: {
     clearGrid(){
@@ -98,41 +96,12 @@ export default {
       this.drawCells();
       this.stopGame();
     },
-
-    drawGridSquares() {
-      // Design canvas Xs
-      for (let n = 1; n < this.columnNumber; n++) {
-        this.context.strokeStyle = "grey";
-        this.context.beginPath();
-        this.context.lineWidth = 0.5;
-        this.context.lineCap = "square";
-        this.context.moveTo(n * this.cellSize, 0);
-        this.context.lineTo(n * this.cellSize, this.rowNumber * this.cellSize);
-        this.context.stroke();
-        this.context.closePath();
-      }
-
-      // Design canvas Ys
-      for (let n = 1; n < this.rowNumber; n++) {
-        this.context.strokeStyle = "grey";
-        this.context.beginPath();
-        this.context.lineWidth = 0.5;
-        this.context.lineCap = "square";
-        this.context.moveTo(0, n * this.cellSize);
-        this.context.lineTo(
-          this.columnNumber * this.cellSize,
-          n * this.cellSize
-        );
-        this.context.stroke();
-        this.context.closePath();
-      }
-    },
     drawCells() {
       for (let y = 0; y < this.rowNumber; y++) {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = this.getRandAliveColor();
+            this.context.fillStyle = "#0b2f72";
           } else {
             this.context.fillStyle = this.getRandDeadColor();
           }
@@ -150,7 +119,7 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getEditorCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = "turquoise";
+            this.context.fillStyle = "rgb(212, 23, 156)";
           } else {
             this.context.fillStyle = "white";
           }
@@ -163,21 +132,33 @@ export default {
         }
       }
     },
+    editCell(e){
+      if (this.isEditing){
+        let x = Math.floor(e.offsetX / this.cellSize);
+        let y = Math.floor(e.offsetY / this.cellSize);
+        if(x >= 0 && x<this.columnNumber && y>=0 && y<this.rowNumber){
+
+          if(this.$store.getters["getCellState"](x, y) !== true){
+            if(e.which == 1){ // Left Click, give birth
+              this.$store.dispatch("setEditorCellAlive",[x,y]);
+              this.drawEditorCells();
+            }
+          }
+          if(this.$store.getters["getCellState"](x, y) == true){
+            if (e.which == 2) {// Wheel Click, kill
+              this.$store.dispatch("setEditorCellDead",[x,y]);
+              this.drawEditorCells();
+            }
+          }
+        }
+      }
+    },
     // Not used yet
     getAliveCellsPosition(){
       let livingCells = this.$store.getters["getAliveCellsPosition"];
       console.log(livingCells)
     },
-    giveBirth(e){
-      if (this.isEditing){
-        let x = Math.floor(e.offsetX / this.cellSize);
-        let y = Math.floor(e.offsetY / this.cellSize);
-        if(this.$store.getters["getCellState"](x, y) !== true){
-          this.$store.dispatch("setEditorCellAlive",[x,y]);
-          this.drawEditorCells();
-        }
-      }
-    },
+    // Not used anymore
     getRandAliveColor(){
       return "rgb("+ Math.floor(Math.random()*20+20) +", "+ Math.floor(Math.random()*60+100) +", "+ Math.floor(Math.random()*30+190) +")"
     },
@@ -198,9 +179,17 @@ export default {
       this.$store.dispatch("setGridData", gridData);
       this.drawCells();
     },
+    slowDown(){
+      this.$store.dispatch("slowDown");
+    },
+    speedUp(){
+      this.$store.dispatch("speedUp");
+    },
     startEdit(e){
       this.isEditing = true;
-      this.giveBirth(e);
+
+      this.editCell(e);
+      this.drawEditorCells();
       if (this.isRunning){
         this.stopGame();
         this.wasRunning = true;
@@ -221,7 +210,7 @@ export default {
           this.tick();
           this.timer = setTimeout(
             tick.bind(this),
-            10
+            this.speedValue[this.speed]
           )
         }.bind(this),
         10
@@ -242,15 +231,26 @@ export default {
       rowNumber: this.rowNumber,
       columnNumber: this.columnNumber,
     });
-    //this.putStarter();
     this.drawCells();
+    //this.putStarter();
+  },
+  unmounted(){
+    window.removeEventListener('resize', this.handleResize);
   },
 };
 </script>
 
 <style scoped>
-.btn {
-  width: 80px;
-  margin: 5px 10px;
+#gameGrid {
+  border: 10px solid rgb(117, 117, 117);
+  background-color: rgb(71, 71, 71);
+  border-radius: 10px;
+  box-shadow: 0 0 10px black;
+}
+.grid_editor_pause {
+  border: 10px solid rgb(84, 0, 95) !important;
+}
+.grid_running {
+  border: 10px solid rgb(0, 33, 95) !important;
 }
 </style>
