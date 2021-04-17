@@ -7,6 +7,7 @@
     <tool-bar
       :isRunning="isRunning"
       :speed="speed"
+      @get-alive-cells-position="getAliveCellsPosition"
       @clear-grid="clearGrid"
       @put-starter="putStarter"
       @slow-down="slowDown"
@@ -38,7 +39,7 @@ export default {
   }, */
   data() {
     return {
-      gridWidth: 1500, // Grid width in pixel
+      gridWidth: 1400, // Grid width in pixel
       cellBorder: 1, // Cell separation in pixel
       rowNumber: this.$store.getters.getRowNumber, // Row amount from store
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
@@ -155,10 +156,9 @@ export default {
         }
       }
     },
-    // Not used yet
     getAliveCellsPosition(){
       let livingCells = this.$store.getters["getAliveCellsPosition"];
-      console.log(livingCells)
+      console.log(livingCells);
     },
     getColors(){
       this.mainColor = getComputedStyle(document.querySelector('.main-btn')).borderColor;

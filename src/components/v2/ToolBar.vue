@@ -6,6 +6,9 @@
     <div
       class="nav-control-left col-5  d-flex flex-row justify-content-end align-items-center"
     >
+      <button class="btn btn-danger" @click="getAliveCellsPosition">
+        Live cells
+      </button>
       <div
         class="btn speed d-flex flex-row justify-content-center align-items-center m-0 p-0"
       >
@@ -116,6 +119,9 @@ export default {
     },
     tick() {
       this.$emit("tick");
+    },
+    getAliveCellsPosition() {
+      this.$emit("get-alive-cells-position");
     },
   },
 };

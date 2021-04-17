@@ -104,15 +104,7 @@ export default createStore({
 
   getters: {
     getAliveCellsPosition: (state) => {
-      const cells = [];
-      for (let x = 0; x < state.columnNumber; x++) {
-        for (let y = 0; y < state.rowNumber; y++) {
-          if (state.gridData[y][x] === true) {
-            cells.push([y, x]);
-          }
-        }
-      }
-      return cells;
+      return GameLogic.getAliveCellsPosition(state.gridData);
     },
     getCellState: (state) => (row, col) => {
       return state.gridData[row][col];
