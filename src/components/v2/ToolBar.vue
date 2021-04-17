@@ -51,7 +51,11 @@
     </div>
 
     <div class="nav-control-center col-2">
-      <button v-if="!isRunning" class="btn main-btn bg-blue" @click="startGame">
+      <button
+        v-if="!isRunning"
+        class="btn main-btn bg-main-color"
+        @click="startGame"
+      >
         <i class="fa fa-play"></i>
       </button>
       <button v-if="isRunning" class="btn main-btn bg-purple" @click="stopGame">
@@ -65,7 +69,7 @@
       <button class="btn btn-light bg-eraser " @click="clearGrid">
         <i class="far fa-eraser"></i>
       </button>
-      <button v-if="!isRunning" class="btn btn-info " @click="tick">
+      <button v-if="!isRunning" class="btn btn-info" @click="tick">
         <i class="fa fa-stopwatch"></i>
       </button>
       <div v-if="isRunning" class="btn btn-secondary " disbaled>
@@ -117,11 +121,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #navbar {
-  background: rgb(11, 47, 114);
-  border-bottom: rgb(0, 0, 0) 1px solid;
-  margin-bottom: 20px;
+  background: $darkerMainColor;
+  box-shadow: $mainColor 0 0 10px;
+  margin-bottom: 15px;
 }
 .indicator {
   height: 10px;
@@ -131,7 +135,7 @@ export default {
   background-color: rgb(129, 129, 129);
 }
 .indicator_active {
-  background-color: rgb(255, 0, 179);
+  background-color: $oppositeColor;
 }
 .btn {
   font-size: 1.4em;
@@ -152,23 +156,23 @@ export default {
   color: white;
   width: 100px;
   background-color: rgb(41, 41, 41);
-  border: 1px rgb(114, 114, 114) solid;
+  border: 1px $darkerOppositeColor solid;
 }
 .bg-eraser {
   border: 0px;
   background: linear-gradient(0.12turn, #e97bc4 50%, #2ca0ff 50%);
 }
-.bg-blue {
-  border: rgb(23, 121, 212) 1px solid;
-  background-color: rgb(23, 121, 212);
+.bg-main-color {
+  border: $mainColor 1px solid;
+  background-color: $lighterMainColor;
   color: white;
 }
 .bg-purple {
-  border: rgb(212, 23, 156) 1px solid;
-  background-color: rgb(212, 23, 156);
+  border: $oppositeColor 1px solid;
+  background-color: $lighterOppositeColor;
   color: white;
 }
 .bg-purple:hover {
-  background-color: rgb(212, 23, 156);
+  background-color: $lighterOppositeColor;
 }
 </style>

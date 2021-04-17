@@ -38,7 +38,7 @@ export default {
   }, */
   data() {
     return {
-      gridWidth: 1000, // Grid width in pixel
+      gridWidth: 1500, // Grid width in pixel
       cellBorder: 1, // Cell separation in pixel
       rowNumber: this.$store.getters.getRowNumber, // Row amount from store
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
@@ -46,6 +46,8 @@ export default {
       isEditing: false, // Tells if the game is in editor mode
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
+      mainColor: null,
+      oppositeColor: null,
       speedValue:{
         1:160,
         2:120,
@@ -101,7 +103,7 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = "#0b2f72";
+            this.context.fillStyle = this.mainColor;
           } else {
             this.context.fillStyle = this.getRandDeadColor();
           }
@@ -119,7 +121,7 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getEditorCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = "rgb(212, 23, 156)";
+            this.context.fillStyle = this.oppositeColor;
           } else {
             this.context.fillStyle = "white";
           }
@@ -157,6 +159,10 @@ export default {
     getAliveCellsPosition(){
       let livingCells = this.$store.getters["getAliveCellsPosition"];
       console.log(livingCells)
+    },
+    getColors(){
+      this.mainColor = getComputedStyle(document.querySelector('.main-btn')).borderColor;
+      this.oppositeColor = getComputedStyle(document.querySelector('.speed')).borderColor;
     },
     // Not used anymore
     getRandAliveColor(){
@@ -232,6 +238,7 @@ export default {
       columnNumber: this.columnNumber,
     });
     this.drawCells();
+    this.getColors();
     //this.putStarter();
   },
   unmounted(){
@@ -240,7 +247,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 #gameGrid {
   border: 10px solid rgb(117, 117, 117);
   background-color: rgb(71, 71, 71);
@@ -248,9 +255,9 @@ export default {
   box-shadow: 0 0 10px black;
 }
 .grid_editor_pause {
-  border: 10px solid rgb(84, 0, 95) !important;
+  border: 10px solid $oppositeColor !important;
 }
 .grid_running {
-  border: 10px solid rgb(0, 33, 95) !important;
+  border: 10px solid $darkerMainColor !important;
 }
 </style>
