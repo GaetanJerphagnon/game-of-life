@@ -115,7 +115,11 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
           if (cellState <= 5 && cellState > 0) {
-            this.context.fillStyle = this.colors["alive"+cellState];
+            if(this.colors["alive"+cellState]){
+              this.context.fillStyle = this.colors["alive"+cellState];
+            } else {
+              this.context.fillStyle = this.colors.main;
+            }
           } else {
             this.context.fillStyle = this.getRandDeadColor();
           }
@@ -133,9 +137,13 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getEditorCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = this.colors["dead"+cellState];
+            if(this.colors["dead"+cellState]){
+              this.context.fillStyle = this.colors["dead"+cellState];
+            } else {
+              this.context.fillStyle = this.colors.main;
+            }
           } else {
-            this.context.fillStyle = "rgb(230,230,230)";
+            this.context.fillStyle = "rgb(240,240,240)";
           }
           this.context.fillRect(
             x * this.cellSize + this.cellBorder,
@@ -274,8 +282,8 @@ export default {
 
 <style lang="scss">
 #gameGrid {
-  border: 10px solid rgb(117, 117, 117);
-  background-color: rgb(71, 71, 71);
+  border: 10px solid rgb(158, 158, 158);
+  background-color: rgb(226, 226, 226);
   border-radius: 10px;
   box-shadow: 0 0 10px black;
 }

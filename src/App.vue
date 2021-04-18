@@ -5,7 +5,7 @@
 <style>
 #app {
   height: 100vh;
-  background-color: #666666;
+  background-color: #858585;
 }
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
