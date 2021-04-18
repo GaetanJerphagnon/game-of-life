@@ -44,8 +44,6 @@ export default {
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
       colors: [], // Got from main.js
-      mainColor: null, // Got from main.js
-      oppositeColor: null, // Got from main.js
       speedValue:{ // Time for each generation in ms
         1:160,
         2:120,
