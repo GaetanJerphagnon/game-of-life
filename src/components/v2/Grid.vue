@@ -38,7 +38,7 @@ export default {
   }, */
   data() {
     return {
-      gridWidth: 1500, // Grid width in pixel
+      gridWidth: 1200, // Grid width in pixel
       cellBorder: 1, // Cell separation in pixel
       rowNumber: this.$store.getters.getRowNumber, // Row amount from store
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
@@ -46,9 +46,9 @@ export default {
       isEditing: false, // Tells if the game is in editor mode
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
-      mainColor: null,
-      oppositeColor: null,
-      speedValue:{
+      mainColor: null, // Got from main.js
+      oppositeColor: null, // Got from main.js
+      speedValue:{ // Time for each generation in ms
         1:160,
         2:120,
         3:80,
