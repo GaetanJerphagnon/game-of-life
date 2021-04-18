@@ -197,6 +197,5 @@ export default {
 }
 .active {
   background-color: $darkerOppositeColor;
-  opacity: 75%;
 }
 </style>
