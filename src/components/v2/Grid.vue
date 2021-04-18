@@ -20,18 +20,28 @@
       id="gameGrid"
       @mousedown="startEdit"
       @mousemove="editCell"
-      @mouseup="stopEdit"
-      :class="{ grid_running: isRunning, grid_editor_pause: isEditing }"
+      @mouseup="handleMouseUp"
+      :class="{
+        grid_running: isRunning,
+        grid_editor_pause: isEditing,
+        cursor_editor: isEditing,
+      }"
       :width="columnNumber * cellSize"
       :height="rowNumber * cellSize"
+    />
+    <figure-tool-bar
+      @drag-figure="handleDrag"
+      @stop-drag-figure="handleStopDrag"
+      :unselectFigures="dragPayload == null"
     />
   </div>
 </template>
 
 <script>
 import ToolBar from './ToolBar.vue';
+import FigureToolBar from './FigureToolBar.vue';
 export default {
-  components: { ToolBar },
+  components: { ToolBar, FigureToolBar },
   name: "Grid",
   data() {
     return {
@@ -41,6 +51,7 @@ export default {
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
       isRunning: false, // Tells is the game is running
       isEditing: false, // Tells if the game is in editor mode
+      dragPayload: null, // Tells if the user is currently dragging a figure and which figure
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
       colors: [], // Got from main.js
@@ -95,11 +106,9 @@ export default {
       this.stopGame();
     },
     lightenColor(color, amount){
-      console.log(color, amount);
       let valsStr = color.substring(4);
       valsStr = valsStr.substring(0,valsStr.length-1);
       let vals = valsStr.split(',');
-      console.log(vals)
       for (let i =0; i < vals.length; i++){
         vals[i] = parseInt(vals[i]) + amount;
         if (parseInt(vals[i]) > 255){
@@ -202,12 +211,38 @@ export default {
       let num = Math.floor(Math.random()*10+235);
       return "rgb("+ num +", "+ num +", "+ num +")"
     },
+    handleDrag(payload){
+      this.dragPayload = payload;
+    },
+    handleStopDrag(){
+      this.dragPayload = null;
+    },
+    handleMouseUp(event){
+      this.isEditing = false;
+      if(this.dragPayload != null){
+        this.stopDrag(event);
+      }
+      if(this.wasRunning){
+        this.startGame();
+        this.wasRunning = false;
+      }
+      this.drawCells();
+    },
+    stopDrag(event){
+      let x = Math.floor(event.offsetX / this.cellSize);
+      let y = Math.floor(event.offsetY / this.cellSize);
+
+      this.dragPayload.forEach(e => {
+        this.$store.dispatch("setCellAlive",[x+e[0],y+e[1]]);
+      });
+      this.dragPayload = null;
+      this.drawCells();
+    },
     nextGridState() {
       this.$store.dispatch('nextGridState')
     },
     putStarter() {
       let gridData = this.$store.getters.["getGridData"];
-      console.log(gridData);
       for (let i = 0; i < this.starter.length; i++) {
         let x = this.starter[i][0];
         let y = this.starter[i][1];
@@ -224,21 +259,14 @@ export default {
     },
     startEdit(e){
       this.isEditing = true;
-
-      this.editCell(e);
-      this.drawEditorCells();
+      if(this.dragPayload == null){
+        this.editCell(e);
+        this.drawEditorCells();
+      }
       if (this.isRunning){
         this.stopGame();
         this.wasRunning = true;
       }
-    },
-    stopEdit(){
-      this.isEditing = false;
-      if(this.wasRunning){
-        this.startGame();
-        this.wasRunning = false;
-      }
-      this.drawCells();
     },
     startGame() {
       this.isRunning = true;
@@ -284,6 +312,10 @@ export default {
   background-color: rgb(226, 226, 226);
   border-radius: 10px;
   box-shadow: 0 0 10px black;
+  transition: 0.15s ease-in-out;
+}
+.cursor_editor {
+  cursor: pointer;
 }
 .grid_editor_pause {
   border: 10px solid $oppositeColor !important;

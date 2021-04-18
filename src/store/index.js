@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import GameLogic from "@/logic/GameLogic";
+import Figures from "@/figures/figures";
 
 export default createStore({
   state: {
@@ -8,6 +9,7 @@ export default createStore({
     speed: 3,
     gridData: [],
     editorGridData: [],
+    figures: Figures,
   },
 
   // Mutations are function that affect the State.
@@ -122,6 +124,9 @@ export default createStore({
     },
     getEditorCellState: (state) => (row, col) => {
       return state.editorGridData[row][col];
+    },
+    getFigures: (state) => {
+      return state.figures;
     },
     getGridData(state) {
       return state.gridData;

@@ -74,18 +74,20 @@
     <div
       class="nav-control-right col-5 d-flex flex-row justify-content-start align-items-center"
     >
-      <button class="btn btn-light bg-eraser " @click="clearGrid">
-        <i class="far fa-eraser"></i>
-      </button>
+      <div class="eraser-shadow">
+        <button class="btn btn-light bg-eraser " @click="clearGrid">
+          <i class="far fa-eraser"></i>
+        </button>
+      </div>
       <button v-if="!isRunning" class="btn btn-info" @click="tick">
         <i class="fa fa-stopwatch"></i>
       </button>
       <div v-if="isRunning" class="btn btn-secondary " disbaled>
         <i class="fa fa-stopwatch"></i>
       </div>
-      <button class="btn btn-light " @click="putStarter">
+      <!-- <button class="btn btn-light " @click="putStarter">
         <i class="fas fa-shapes"></i>
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
@@ -171,17 +173,34 @@ export default {
 }
 .bg-eraser {
   border: 0px;
+  -webkit-clip-path: polygon(65% 0, 100% 35%, 35% 100%, 0 65%);
+  border-radius: 50%;
   background: linear-gradient(0.12turn, #e97bc4 50%, #2ca0ff 50%);
+}
+.eraser-shadow {
+  transition: 0.15s ease-in-out;
+  &:hover {
+    color: white;
+    filter: drop-shadow(0 0 10px $mainColor);
+  }
 }
 .bg-main-color {
   border: $mainColor 1px solid;
   background-color: $lighterMainColor;
   color: white;
+
+  &:hover {
+    box-shadow: $mainColor 0 0 15px;
+  }
 }
 .bg-purple {
   border: $oppositeColor 1px solid;
   background-color: $lighterOppositeColor;
   color: white;
+
+  &:hover {
+    box-shadow: $oppositeColor 0 0 15px;
+  }
 }
 .bg-purple:hover {
   background-color: $lighterOppositeColor;
