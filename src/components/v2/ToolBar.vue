@@ -40,10 +40,18 @@
         </div>
 
         <div class="d-flex flex-column justify-content-center align-items-end">
-          <button class="btn tiny-btn text-white" @click="speedUp">
+          <button
+            class="btn tiny-btn text-white"
+            :class="{ arrow_disabled: speed == 5 }"
+            @click="speedUp"
+          >
             <i class="fa fa-arrow-up"></i>
           </button>
-          <button class="btn tiny-btn text-white" @click="slowDown">
+          <button
+            class="btn tiny-btn text-white"
+            :class="{ arrow_disabled: speed == 1 }"
+            @click="slowDown"
+          >
             <i class="fa fa-arrow-down"></i>
           </button>
         </div>
@@ -126,6 +134,9 @@ export default {
   background: $darkerMainColor;
   box-shadow: $mainColor 0 0 10px;
   margin-bottom: 15px;
+}
+.arrow_disabled {
+  background-color: grey !important;
 }
 .indicator {
   height: 10px;

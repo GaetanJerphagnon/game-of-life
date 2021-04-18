@@ -33,9 +33,6 @@ import ToolBar from './ToolBar.vue';
 export default {
   components: { ToolBar },
   name: "Grid",
-  /*   components: {
-    Cell,
-  }, */
   data() {
     return {
       gridWidth: 1200, // Grid width in pixel
@@ -46,6 +43,7 @@ export default {
       isEditing: false, // Tells if the game is in editor mode
       wasRunning: false, // Tells if the game was pause during an editor mode
       context: null, // Context for canvas
+      colors: [], // Got from main.js
       mainColor: null, // Got from main.js
       oppositeColor: null, // Got from main.js
       speedValue:{ // Time for each generation in ms
@@ -98,12 +96,26 @@ export default {
       this.drawCells();
       this.stopGame();
     },
+    lightenColor(color, amount){
+      console.log(color, amount);
+      let valsStr = color.substring(4);
+      valsStr = valsStr.substring(0,valsStr.length-1);
+      let vals = valsStr.split(',');
+      console.log(vals)
+      for (let i =0; i < vals.length; i++){
+        vals[i] = parseInt(vals[i]) + amount;
+        if (parseInt(vals[i]) > 255){
+          vals[i] = 255;
+        }
+      }
+      return "rgb("+ vals[0] +","+ vals[1] +","+ vals[2] +")";
+    },
     drawCells() {
       for (let y = 0; y < this.rowNumber; y++) {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
-          if (cellState) {
-            this.context.fillStyle = this.mainColor;
+          if (cellState <= 5 && cellState > 0) {
+            this.context.fillStyle = this.colors["alive"+cellState];
           } else {
             this.context.fillStyle = this.getRandDeadColor();
           }
@@ -121,9 +133,9 @@ export default {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getEditorCellState"](x, y);
           if (cellState) {
-            this.context.fillStyle = this.oppositeColor;
+            this.context.fillStyle = this.colors["dead"+cellState];
           } else {
-            this.context.fillStyle = "white";
+            this.context.fillStyle = "rgb(230,230,230)";
           }
           this.context.fillRect(
             x * this.cellSize + this.cellBorder,
@@ -140,13 +152,15 @@ export default {
         let y = Math.floor(e.offsetY / this.cellSize);
         if(x >= 0 && x<this.columnNumber && y>=0 && y<this.rowNumber){
 
-          if(this.$store.getters["getCellState"](x, y) !== true){
+          let cellState = this.$store.getters["getCellState"](x, y);
+
+          if(cellState === 0){
             if(e.which == 1){ // Left Click, give birth
               this.$store.dispatch("setEditorCellAlive",[x,y]);
               this.drawEditorCells();
             }
           }
-          if(this.$store.getters["getCellState"](x, y) == true){
+          if(cellState > 0 && cellState <= 5 ){
             if (e.which == 2) {// Wheel Click, kill
               this.$store.dispatch("setEditorCellDead",[x,y]);
               this.drawEditorCells();
@@ -161,8 +175,18 @@ export default {
       console.log(livingCells)
     },
     getColors(){
-      this.mainColor = getComputedStyle(document.querySelector('.main-btn')).borderColor;
-      this.oppositeColor = getComputedStyle(document.querySelector('.speed')).borderColor;
+      this.colors.main = getComputedStyle(document.querySelector('.main-btn')).borderColor;
+      this.colors.opposite = getComputedStyle(document.querySelector('.speed')).borderColor;
+      this.colors.alive1 = this.lightenColor(this.colors.main, -10);
+      this.colors.alive2 = this.lightenColor(this.colors.main, 18);
+      this.colors.alive3 = this.lightenColor(this.colors.alive2, 18);
+      this.colors.alive4 = this.lightenColor(this.colors.alive3, 18);
+      this.colors.alive5 = this.lightenColor(this.colors.alive4, 18);
+      this.colors.dead1 = this.lightenColor(this.colors.opposite, -40);
+      this.colors.dead2 = this.lightenColor(this.colors.opposite, 18);
+      this.colors.dead3 = this.lightenColor(this.colors.dead2, 18);
+      this.colors.dead4 = this.lightenColor(this.colors.dead3, 18);
+      this.colors.dead5 = this.lightenColor(this.colors.dead4, 18);
     },
     // Not used anymore
     getRandAliveColor(){
@@ -177,6 +201,7 @@ export default {
     },
     putStarter() {
       let gridData = this.$store.getters.["getGridData"];
+      console.log(gridData);
       for (let i = 0; i < this.starter.length; i++) {
         let x = this.starter[i][0];
         let y = this.starter[i][1];

@@ -15,7 +15,7 @@ export default createStore({
     SET_CELL_ALIVE(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
-      state.gridData[x][y] = true;
+      state.gridData[x][y] = 5;
     },
     SET_ROW_NUMBER(state, int) {
       state.rowNumber = int;
@@ -26,12 +26,12 @@ export default createStore({
     SET_EDITOR_CELL_ALIVE(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
-      state.editorGridData[x][y] = true;
+      state.editorGridData[x][y] = 5;
     },
     SET_EDITOR_CELL_DEAD(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
-      state.editorGridData[x][y] = false;
+      state.editorGridData[x][y] = 0;
     },
     SET_GRID_DATA(state, array) {
       state.gridData = array;

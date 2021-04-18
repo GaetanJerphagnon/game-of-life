@@ -5,7 +5,7 @@ export default {
     for (let x = 0; x < rowNumber; x++) {
       const row = [];
       for (let y = 0; y < columnNumber; y++) {
-        row.push(false);
+        row.push(0);
       }
       grid.push(row);
     }
@@ -40,56 +40,72 @@ export default {
     if (
       typeof gridData[y] !== "undefined" &&
       typeof gridData[y][x] !== "undefined" &&
-      gridData[y][x]
+      gridData[y][x] !== 0
     ) {
       neighbors++;
     }
     if (
       typeof gridData[y] !== "undefined" &&
       typeof gridData[y][x] !== "undefined" &&
-      gridData[y][xx]
+      gridData[y][xx] !== 0
     ) {
       neighbors++;
     }
     if (
       typeof gridData[y] !== "undefined" &&
       typeof gridData[y][xxx] !== "undefined" &&
-      gridData[y][xxx]
+      gridData[y][xxx] !== 0
     ) {
       neighbors++;
     }
     // Left and Right
-    if (typeof gridData[yy][x] !== "undefined" && gridData[yy][x]) {
+    if (typeof gridData[yy][x] !== "undefined" && gridData[yy][x] !== 0) {
       neighbors++;
     }
-    if (typeof gridData[yy][xxx] !== "undefined" && gridData[yy][xxx]) {
+    if (typeof gridData[yy][xxx] !== "undefined" && gridData[yy][xxx] !== 0) {
       neighbors++;
     }
     //Beneath
     if (
       typeof gridData[yyy] !== "undefined" &&
       typeof gridData[yyy][x] !== "undefined" &&
-      gridData[yyy][x]
+      gridData[yyy][x] !== 0
     ) {
       neighbors++;
     }
     if (
       typeof gridData[yyy] !== "undefined" &&
       typeof gridData[yyy][xx] !== "undefined" &&
-      gridData[yyy][xx]
+      gridData[yyy][xx] !== 0
     ) {
       neighbors++;
     }
     if (
       typeof gridData[yyy] !== "undefined" &&
       typeof gridData[yyy][xxx] !== "undefined" &&
-      gridData[yyy][xxx]
+      gridData[yyy][xxx] !== 0
     ) {
       neighbors++;
     }
     return neighbors;
   },
 
+  isCellAlive(cell) {
+    if (cell >= 1 && cell <= 5) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  nextCellState(cell) {
+    if (cell > 1 && cell <= 5) {
+      return cell - 1;
+    } else if (cell == 1) {
+      return cell;
+    } else {
+      return 0;
+    }
+  },
   getNextGridGeneration(gridData) {
     const nextGridState = [];
 
@@ -98,17 +114,23 @@ export default {
       for (let x = 0; x < gridData[y].length; x++) {
         let nbNeighbors = this.getNeighbors(gridData, x, y);
         let currentCell = gridData[y][x];
-        if (currentCell === true && (nbNeighbors === 2 || nbNeighbors === 3)) {
-          nextGridState[y][x] = true;
+        if (
+          this.isCellAlive(currentCell) === true &&
+          (nbNeighbors === 2 || nbNeighbors === 3)
+        ) {
+          nextGridState[y][x] = this.nextCellState(currentCell);
         } else if (
-          currentCell === true &&
+          this.isCellAlive(currentCell) === true &&
           (nbNeighbors < 2 || nbNeighbors > 3)
         ) {
-          nextGridState[y][x] = false;
-        } else if (currentCell === false && nbNeighbors === 3) {
-          nextGridState[y][x] = true;
+          nextGridState[y][x] = 0;
+        } else if (
+          this.isCellAlive(currentCell) === false &&
+          nbNeighbors === 3
+        ) {
+          nextGridState[y][x] = 5;
         } else {
-          nextGridState[y][x] = false;
+          nextGridState[y][x] = this.nextCellState(currentCell);
         }
       }
     }
