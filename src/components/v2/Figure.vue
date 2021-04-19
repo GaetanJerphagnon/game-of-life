@@ -48,8 +48,8 @@ export default {
       firstDrawn: false,
       grid: null,
       colors: [],
-      cellBorder: 1,
-      gridWidth: 150,
+      cellBorder: 0.01,
+      gridWidth: 100,
       gridHeight: 0,
       context: null,
     };
@@ -164,7 +164,6 @@ export default {
     this.getColors();
     this.getGrid(this.col, this.row);
     this.isTall();
-    console.log(this.grid);
   },
 };
 </script>
@@ -181,11 +180,10 @@ export default {
 }
 .selected {
   background-color: $mainColor !important;
-  box-shadow: $oppositeColor 0 0 25px;
+  box-shadow: $oppositeColor 0 0 15px 10px !important;
 }
 .figure {
-  width: 140px;
-  height: 140px;
+  height: 90%;
 }
 .col {
   padding: 0;

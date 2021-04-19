@@ -4,7 +4,7 @@ import Figures from "@/figures/figures";
 
 export default createStore({
   state: {
-    rowNumber: 25,
+    rowNumber: 30,
     columnNumber: 50,
     speed: 3,
     gridData: [],

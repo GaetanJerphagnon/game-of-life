@@ -135,10 +135,10 @@ export default {
 #navbar {
   background: $darkerMainColor;
   box-shadow: $mainColor 0 0 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .arrow_disabled {
-  background-color: grey !important;
+  background-color: rgb(150, 150, 150) !important;
 }
 .indicator {
   height: 10px;
@@ -148,11 +148,12 @@ export default {
   background-color: rgb(129, 129, 129);
 }
 .indicator_active {
+  box-shadow: $oppositeColor 0 0 5px;
   background-color: $oppositeColor;
 }
 .btn {
-  font-size: 1.4em;
-  width: 60px;
+  font-size: 1em;
+  width: 3em;
   margin: 5px 10px;
   padding: 10px 0;
   border-radius: 0;
@@ -160,14 +161,14 @@ export default {
 .tiny-btn {
   background-color: rgb(75, 75, 75);
   font-size: 0.8em;
-  width: 20px;
-  height: 25px;
+  width: 15px;
+  height: 20px;
   margin: 1px;
   padding: 0;
 }
 .speed {
   color: white;
-  width: 100px;
+  width: 95px;
   background-color: rgb(41, 41, 41);
   border: 1px $darkerOppositeColor solid;
 }

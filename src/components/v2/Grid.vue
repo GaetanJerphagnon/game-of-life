@@ -45,7 +45,7 @@ export default {
   name: "Grid",
   data() {
     return {
-      gridWidth: 1200, // Grid width in pixel
+      gridWidth: 1000, // Grid width in pixel
       cellBorder: 1, // Cell separation in pixel
       rowNumber: this.$store.getters.getRowNumber, // Row amount from store
       columnNumber: this.$store.getters.getColumnNumber, // Column amount from store
@@ -62,24 +62,6 @@ export default {
         4:40,
         5:5,
       },
-      starter: [ // Starter figure, for tests
-        [31, 19],
-        [31, 20],
-        [31, 21],
-        [32, 18],
-        [32, 22],
-        [33, 17],
-        [34, 17],
-        [33, 23],
-        [34, 23],
-        [35, 20],
-        [36, 18],
-        [36, 22],
-        [37, 19],
-        [37, 20],
-        [37, 21],
-        [38, 20],
-      ],
     };
   },
   computed: {
@@ -95,6 +77,16 @@ export default {
     speed() {
       return this.$store.getters.getSpeed;
     },
+  },
+  watch: {
+    gridWidth: function (){
+      this.context.clearRect(
+            0,
+            0,
+            this.totalWidth,
+            this.totalHeight);
+      setTimeout(this.drawCells,10); // Doesn't work without Timeout
+    }
   },
   methods: {
     clearGrid(){
@@ -118,6 +110,7 @@ export default {
       return "rgb("+ vals[0] +","+ vals[1] +","+ vals[2] +")";
     },
     drawCells() {
+      this.context.clearRect(0,0,this.totalWidth,this.totalHeight);
       for (let y = 0; y < this.rowNumber; y++) {
         for (let x = 0; x < this.columnNumber; x++) {
           let cellState = this.$store.getters["getCellState"](x, y);
@@ -288,17 +281,26 @@ export default {
     tick(){
       this.nextGridState();
       this.drawCells();
-    }
+    },
+    handleResize(){
+      if(window.innerWidth < 1100){
+        this.gridWidth = window.innerWidth*0.9;
+      }
+      if (window.innerWidth > 1100){
+        this.gridWidth = 1000;
+      }
+      if (window.innerWidth > 1400){
+        this.gridWidth = 1200;
+      }
+    },
   },
   mounted() {
     this.context = this.$refs.gameGrid.getContext("2d");
-    this.$store.dispatch("initGrid", {
-      rowNumber: this.rowNumber,
-      columnNumber: this.columnNumber,
-    });
+    this.$store.dispatch("initGrid");
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize)
     this.drawCells();
     this.getColors();
-    //this.putStarter();
   },
   unmounted(){
     window.removeEventListener('resize', this.handleResize);
@@ -308,7 +310,7 @@ export default {
 
 <style lang="scss">
 #gameGrid {
-  border: 10px solid rgb(158, 158, 158);
+  border: 5px solid rgb(158, 158, 158);
   background-color: rgb(226, 226, 226);
   border-radius: 10px;
   box-shadow: 0 0 10px black;
@@ -318,9 +320,9 @@ export default {
   cursor: pointer;
 }
 .grid_editor_pause {
-  border: 10px solid $oppositeColor !important;
+  border: 5px solid $oppositeColor !important;
 }
 .grid_running {
-  border: 10px solid $darkerMainColor !important;
+  border: 5px solid $darkerMainColor !important;
 }
 </style>

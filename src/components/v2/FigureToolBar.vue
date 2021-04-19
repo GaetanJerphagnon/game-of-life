@@ -52,9 +52,7 @@ export default {
       this.figureSelected = null;
     },
   },
-  mounted() {
-    console.log(this.figures);
-  },
+  mounted() {},
 };
 </script>
 
@@ -63,7 +61,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  height: 10em;
+  height: 8em;
   width: 100%;
   background: $darkerMainColor;
   box-shadow: $mainColor 0 0 10px;
