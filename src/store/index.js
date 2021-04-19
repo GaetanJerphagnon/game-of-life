@@ -17,7 +17,12 @@ export default createStore({
     SET_CELL_ALIVE(state, coordinates) {
       let x = coordinates[0];
       let y = coordinates[1];
-      state.gridData[x][y] = 5;
+      if (
+        typeof state.gridData[x] != "undefined" &&
+        typeof state.gridData[x][y] != "undefined"
+      ) {
+        state.gridData[x][y] = 5;
+      }
     },
     SET_ROW_NUMBER(state, int) {
       state.rowNumber = int;
