@@ -1,6 +1,8 @@
 <template>
   <div id="figure-toolbar">
-    <div class="container d-flex justify-content-center align-items-center">
+    <div
+      class="container d-flex justify-content-center align-items-center flex-column"
+    >
       <Figure
         @stop-drag-figure="handleStopDrag"
         v-for="(fig, index) in figures"
@@ -58,14 +60,10 @@ export default {
 
 <style lang="scss" scoped>
 #figure-toolbar {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  height: 8em;
-  width: 100%;
+  height: 100vh;
+  min-width: 150px;
   background: $darkerMainColor;
-  box-shadow: $mainColor 0 0 10px;
-  margin-top: 15px;
+  border-right: $oppositeColor 1px solid;
 }
 .container {
   height: 100%;

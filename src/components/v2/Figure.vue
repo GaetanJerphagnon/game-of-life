@@ -4,7 +4,7 @@
     :class="{
       selected: isSelected,
     }"
-    class="figure-container mx-2 p-1"
+    class="figure-container my-2 p-1"
   >
     <div
       class="figure col-12 d-flex flex-column justify-content-center align-items-center"
@@ -181,9 +181,6 @@ export default {
 .selected {
   background-color: $mainColor !important;
   box-shadow: $oppositeColor 0 0 15px 10px !important;
-}
-.figure {
-  height: 90%;
 }
 .col {
   padding: 0;

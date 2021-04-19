@@ -1,39 +1,41 @@
 <template>
   <div
     id="grid"
-    class="container-fluid px-0"
+    class="container-fluid px-0 d-flex flex-row"
     :style="'max-width:' + columnNumber * cellSize + ';'"
   >
-    <tool-bar
-      :isRunning="isRunning"
-      :speed="speed"
-      @clear-grid="clearGrid"
-      @put-starter="putStarter"
-      @slow-down="slowDown"
-      @speed-up="speedUp"
-      @start-game="startGame"
-      @stop-game="stopGame"
-      @tick="tick"
-    />
-    <canvas
-      ref="gameGrid"
-      id="gameGrid"
-      @mousedown="startEdit"
-      @mousemove="editCell"
-      @mouseup="handleMouseUp"
-      :class="{
-        grid_running: isRunning,
-        grid_editor_pause: isEditing,
-        cursor_editor: isEditing,
-      }"
-      :width="columnNumber * cellSize"
-      :height="rowNumber * cellSize"
-    />
     <figure-tool-bar
       @drag-figure="handleDrag"
       @stop-drag-figure="handleStopDrag"
       :unselectFigures="dragPayload == null"
     />
+    <div class="container-fluid px-0">
+      <tool-bar
+        :isRunning="isRunning"
+        :speed="speed"
+        @clear-grid="clearGrid"
+        @put-starter="putStarter"
+        @slow-down="slowDown"
+        @speed-up="speedUp"
+        @start-game="startGame"
+        @stop-game="stopGame"
+        @tick="tick"
+      />
+      <canvas
+        ref="gameGrid"
+        id="gameGrid"
+        @mousedown="startEdit"
+        @mousemove="editCell"
+        @mouseup="handleMouseUp"
+        :class="{
+          grid_running: isRunning,
+          grid_editor_pause: isEditing,
+          cursor_editor: isEditing,
+        }"
+        :width="columnNumber * cellSize"
+        :height="rowNumber * cellSize"
+      />
+    </div>
   </div>
 </template>
 
@@ -284,13 +286,19 @@ export default {
     },
     handleResize(){
       if(window.innerWidth <= 1000){
-        this.gridWidth = window.innerWidth*0.9;
+        this.gridWidth = window.innerWidth - 200;
       }
       if (window.innerWidth > 1000){
-        this.gridWidth = 950;
+        this.gridWidth = 800;
+      }
+      if (window.innerWidth > 1200){
+        this.gridWidth = 1000;
       }
       if (window.innerWidth > 1400){
         this.gridWidth = 1200;
+      }
+      if (window.innerWidth > 1600){
+        this.gridWidth = 1400;
       }
     },
   },

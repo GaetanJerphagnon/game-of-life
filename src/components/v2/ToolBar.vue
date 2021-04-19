@@ -134,7 +134,7 @@ export default {
 <style lang="scss" scoped>
 #navbar {
   background: $darkerMainColor;
-  box-shadow: $mainColor 0 0 10px;
+  border-bottom: $oppositeColor 1px solid;
   margin-bottom: 10px;
 }
 .arrow_disabled {
