@@ -283,11 +283,11 @@ export default {
       this.drawCells();
     },
     handleResize(){
-      if(window.innerWidth < 1100){
+      if(window.innerWidth <= 1000){
         this.gridWidth = window.innerWidth*0.9;
       }
-      if (window.innerWidth > 1100){
-        this.gridWidth = 1000;
+      if (window.innerWidth > 1000){
+        this.gridWidth = 950;
       }
       if (window.innerWidth > 1400){
         this.gridWidth = 1200;
