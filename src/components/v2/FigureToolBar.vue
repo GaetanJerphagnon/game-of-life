@@ -9,7 +9,7 @@
     </div>
     <div class="container d-flex justify-content-center align-items-center">
       <Figure
-        @stop-drag-figure="handleStopDrag"
+        @stop-drag-figure="handleStopDrag()"
         v-for="(fig, index) in figures"
         :key="index"
         @drag-figure="handleDrag(index)"
@@ -74,6 +74,7 @@ export default {
       this.isDisplayed = !this.isDisplayed;
     },
   },
+  emits: ["stop-drag-figure", "drag-figure"],
   mounted() {},
 };
 </script>
