@@ -1,10 +1,14 @@
 <template>
-  <div
+  <button
     v-if="grid !== null"
     :class="{
       selected: isSelected,
     }"
     class="figure-container mx-2 p-1"
+    v-tooltip="{
+      text: description,
+      displayArrow: true,
+    }"
   >
     <div
       class="figure col-12 d-flex flex-column justify-content-center align-items-center"
@@ -37,7 +41,7 @@
         ></div>
       </div>
     </div>
-  </div>
+  </button>
 </template>
 
 <script>
@@ -81,6 +85,10 @@ export default {
     },
   },
   props: {
+    col: {
+      Required: true,
+      Type: Number,
+    },
     figure: {
       Required: true,
       Type: Array,
@@ -90,11 +98,12 @@ export default {
       Type: Boolean,
       default: false,
     },
-    row: {
-      Required: true,
-      Type: Number,
+    description: {
+      Required: false,
+      Type: String,
+      default: "No description",
     },
-    col: {
+    row: {
       Required: true,
       Type: Number,
     },
@@ -142,7 +151,9 @@ export default {
       }
 
       this.figure.forEach((e) => {
-        gridToReturn[e[1]][e[0]] = 1;
+        if (typeof e !== "string") {
+          gridToReturn[e[1]][e[0]] = 1;
+        }
       });
 
       this.grid = gridToReturn;

@@ -1,12 +1,14 @@
 export default {
-  "3x3": [
+  "R-pentomino: A methuselah with lifespan 1103.": [
+    "3x3",
     [0, 1],
     [0, 2],
     [1, 0],
     [1, 1],
     [2, 1],
   ],
-  "4x7": [
+  "HeavyWeight spaceship: A very well-known period 4 c/2 orthogonal spaceship.": [
+    "4x7",
     [0, 1],
     [0, 3],
     [1, 0],
@@ -20,7 +22,8 @@ export default {
     [6, 1],
     [6, 2],
   ],
-  "10x10": [
+  "A for all: A period 6 oscillator found in March 1993.": [
+    "10x10",
     [0, 4],
     [0, 5],
     [1, 3],
@@ -50,7 +53,8 @@ export default {
     [9, 4],
     [9, 5],
   ],
-  "7x8": [
+  'The "egg"': [
+    "7x8",
     [0, 2],
     [0, 3],
     [0, 4],
@@ -68,7 +72,8 @@ export default {
     [6, 4],
     [7, 3],
   ],
-  "9x13": [
+  "28P7.1: An unnamed period 7 oscillator that is tied as the smallest known.": [
+    "9x13",
     [0, 3],
     [0, 4],
     [1, 3],
@@ -98,7 +103,8 @@ export default {
     [11, 8],
     [12, 8],
   ],
-  "17x17": [
+  "35P52: With a minimum population of 35 cells it is the smallest period 52.": [
+    "17x17",
     [0, 14],
     [1, 12],
     [1, 13],
