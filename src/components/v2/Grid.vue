@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     clearGrid(){
+      console.log(this.colors);
         this.$store.dispatch("initGrid", {
         rowNumber: this.rowNumber,
         columnNumber: this.columnNumber,
@@ -140,7 +141,7 @@ export default {
             if(this.colors["dead"+cellState]){
               this.context.fillStyle = this.colors["dead"+cellState];
             } else {
-              this.context.fillStyle = this.colors.main;
+              this.context.fillStyle = "this.colors.main";
             }
           } else {
             this.context.fillStyle = "rgb(240,240,240)";
@@ -183,8 +184,8 @@ export default {
       console.log(livingCells)
     },
     getColors(){
-      this.colors.main = getComputedStyle(document.querySelector('.main-btn')).borderColor;
-      this.colors.opposite = getComputedStyle(document.querySelector('.speed')).borderColor;
+      this.colors.main = getComputedStyle(document.querySelector('.main-btn')).borderTopColor;
+      this.colors.opposite = getComputedStyle(document.querySelector('.speed')).borderTopColor;
       this.colors.alive1 = this.lightenColor(this.colors.main, -10);
       this.colors.alive2 = this.lightenColor(this.colors.main, 18);
       this.colors.alive3 = this.lightenColor(this.colors.alive2, 18);

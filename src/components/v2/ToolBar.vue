@@ -187,6 +187,7 @@ export default {
 }
 .bg-main-color {
   border: $mainColor 1px solid;
+  border-color: $mainColor;
   background-color: $lighterMainColor;
   color: white;
 
